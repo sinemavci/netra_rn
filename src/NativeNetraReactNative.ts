@@ -10,6 +10,13 @@ export interface Spec extends TurboModule {
   patch(clientId: string, requestOptions: string): Promise<string | undefined>;
 
   delete(clientId: string, requestOptions: string): Promise<string | undefined>;
+
+  build(
+    baseUrl: string,
+    convertedType?: string,
+    headers?: string,
+    circuitBreakerOptions?: string
+  ): Promise<string | undefined>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('NetraReactNative');
