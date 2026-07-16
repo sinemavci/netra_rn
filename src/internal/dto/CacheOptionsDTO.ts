@@ -1,9 +1,10 @@
-import type { CacheOptions } from '../../models/CacheOptions';
+import { CacheOptions } from '../../models/CacheOptions';
+import { BaseDTO } from './BaseDTO';
 
 export class CacheOptionsDTO extends BaseDTO {
-  ttl: number;
+  ttl?: number;
 
-  constructor(ttl: number) {
+  constructor(ttl?: number) {
     super();
     this.ttl = ttl;
   }

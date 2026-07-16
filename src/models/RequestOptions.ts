@@ -1,10 +1,11 @@
 import type { OfflinePolicyAction } from './OfflinePolicyAction';
 import type { SlowNetworkPolicyAction } from './SlowNetworkPolicyAction';
-import type { CacheOptions } from './CacheOptions';
+import { CacheOptions } from './CacheOptions';
 import type { RequestBody } from './RequestBody';
+import 'react-native-get-random-values';
+import uuid from 'react-native-uuid';
 
 export interface RequestOptionsProps {
-  id?: string;
   url: string;
   offlinePolicyAction?: OfflinePolicyAction;
   slowNetworkPolicyAction?: SlowNetworkPolicyAction;
@@ -15,7 +16,7 @@ export interface RequestOptionsProps {
 }
 
 export class RequestOptions {
-  id?: string;
+  id: string;
   url: string;
   offlinePolicyAction?: OfflinePolicyAction;
   slowNetworkPolicyAction?: SlowNetworkPolicyAction;
@@ -25,7 +26,7 @@ export class RequestOptions {
   body?: RequestBody;
 
   constructor(props: RequestOptionsProps) {
-    this.id = props.id;
+    this.id = uuid.v4().toString();
     this.url = props.url;
     this.body = props.body;
     this.headers = props.headers;

@@ -1,7 +1,7 @@
 export class CacheOptions {
   ttl?: number;
 
-  constructor(prop?: number = 600000) {
-    this.ttl = prop;
+  constructor(ttl: number = 600000) {
+    this.ttl = ttl;
   }
 }

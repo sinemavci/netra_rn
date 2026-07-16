@@ -1,0 +1,110 @@
+import { BaseDTO } from './BaseDTO';
+import { OfflinePolicyActionDTO } from './OfflinePolicyActionDTO';
+import { SlowNetworkPolicyActionDTO } from './SlowNetworkPolicyActionDTO';
+import { CacheOptionsDTO } from './CacheOptionsDTO';
+import { RequestBodyDTO } from './RequestBodyDTO';
+import { RequestOptions } from '../../models';
+
+export class RequestOptionsDTO extends BaseDTO {
+  id: string;
+  url: string;
+  offlinePolicyAction?: OfflinePolicyActionDTO;
+  slowNetworkPolicyAction?: SlowNetworkPolicyActionDTO;
+  cacheOptions?: CacheOptionsDTO;
+  headers?: Map<string, string>;
+  cancelOnDispose?: boolean;
+  body?: RequestBodyDTO;
+
+  constructor(
+    id: string,
+    url: string,
+    offlinePolicyAction?: OfflinePolicyActionDTO,
+    slowNetworkPolicyAction?: SlowNetworkPolicyActionDTO,
+    cacheOptions?: CacheOptionsDTO,
+    headers?: Map<string, string>,
+    cancelOnDispose?: boolean,
+    body?: RequestBodyDTO
+  ) {
+    super();
+    this.id = id;
+    this.url = url;
+    this.offlinePolicyAction = offlinePolicyAction;
+    this.slowNetworkPolicyAction = slowNetworkPolicyAction;
+    this.cacheOptions = cacheOptions;
+    this.headers = headers;
+    this.cancelOnDispose = cancelOnDispose;
+    this.body = body;
+  }
+
+  static fromDataModel(model: RequestOptions) {
+    return new RequestOptionsDTO(
+      model.id,
+      model.url,
+      model.offlinePolicyAction !== undefined
+        ? OfflinePolicyActionDTO.fromDataModel(model.offlinePolicyAction)
+        : undefined,
+      model.slowNetworkPolicyAction !== undefined
+        ? SlowNetworkPolicyActionDTO.fromDataModel(
+            model.slowNetworkPolicyAction
+          )
+        : undefined,
+      model.cacheOptions !== undefined
+        ? CacheOptionsDTO.fromDataModel(model.cacheOptions)
+        : undefined,
+      model.headers,
+      model.cancelOnDispose,
+      model.body !== undefined
+        ? RequestBodyDTO.fromDataModel(model.body)
+        : undefined
+    );
+  }
+
+  static fromJSON(json: string) {
+    const parsedJSON = JSON.parse(json);
+    return new RequestOptionsDTO(
+      parsedJSON.id,
+      parsedJSON.url,
+      parsedJSON.offlinePolicyAction !== undefined
+        ? OfflinePolicyActionDTO.fromJSON(parsedJSON.offlinePolicyAction)
+        : undefined,
+      parsedJSON.slowNetworkPolicyAction !== undefined
+        ? SlowNetworkPolicyActionDTO.fromJSON(
+            parsedJSON.slowNetworkPolicyAction
+          )
+        : undefined,
+      parsedJSON.cacheOptions !== undefined
+        ? CacheOptionsDTO.fromJSON(parsedJSON.cacheOptions)
+        : undefined,
+      parsedJSON.headers,
+      parsedJSON.cancelOnDispose,
+      parsedJSON.body !== undefined
+        ? RequestBodyDTO.fromJSON(parsedJSON.body)
+        : undefined
+    );
+  }
+
+  toDataModel(): RequestOptions {
+    return new RequestOptions({
+      url: this.url,
+      offlinePolicyAction: this.offlinePolicyAction?.toDataModel(),
+      slowNetworkPolicyAction: this.slowNetworkPolicyAction?.toDataModel(),
+      cacheOptions: this.cacheOptions?.toDataModel(),
+      headers: this.headers,
+      cancelOnDispose: this.cancelOnDispose,
+      body: this.body?.toDataModel(),
+    });
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      url: this.url,
+      offlinePolicyAction: this.offlinePolicyAction?.toJSON(),
+      slowNetworkPolicyAction: this.slowNetworkPolicyAction?.toJSON(),
+      cacheOptions: this.cacheOptions?.toJSON(),
+      headers: this.headers,
+      cancelOnDispose: this.cancelOnDispose,
+      body: this.body?.toJSON(),
+    };
+  }
+}

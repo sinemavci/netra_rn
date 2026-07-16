@@ -1,6 +1,7 @@
 package com.netrareactnative
 
 import android.Manifest
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.example.netra_flutter.dto.CircuitBreakerOptionsDTO
 import com.example.netra_flutter.dto.RequestOptionsDTO
@@ -31,6 +32,7 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
     promise: Promise?
   ) {
     try {
+      Log.e("", "client id in get: ${clientId} -- list count: ${NetraClientList.getClients().first().id}")
       val client = NetraClientList.getClients().find { it.id == clientId }
       val requestOptionsDto = requestOptions.let {
         Gson().fromJson(it, RequestOptionsDTO::class.java)
@@ -353,6 +355,7 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
     }
 
     val client = clientBuilder.build()
+    Log.e("", "client id in built: ${client.id}")
     NetraClientList.add(client)
     //todo
     //clientEventHandlers[client.id] = ClientEventHandler(binaryMessenger, client.id)

@@ -3759,6 +3759,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-native-uuid@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@types/react-native-uuid@npm:2.0.0"
+  dependencies:
+    react-native-uuid: "npm:*"
+  checksum: 10c0/6d3a3bae51a0891bdb557d50d68b887d11d9303c682490ead4121b3bfb06a67a74b8f53b61dadaa08acef66d2c2c1495f1e19687c192a70589174e3b18514207
+  languageName: node
+  linkType: hard
+
 "@types/react@npm:^19.2.0":
   version: 19.2.17
   resolution: "@types/react@npm:19.2.17"
@@ -6455,6 +6464,13 @@ __metadata:
   version: 1.1.0
   resolution: "exsolve@npm:1.1.0"
   checksum: 10c0/38ecec58d6e4ddfe31b5e6773a0193057fcb8462e1c0959aee3c9441729b4db901f3b23af68963cb871fb3f83b46c49ed2f69e0ef6d5254951f483c68cc934e9
+  languageName: node
+  linkType: hard
+
+"fast-base64-decode@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "fast-base64-decode@npm:1.0.0"
+  checksum: 10c0/6d8feab513222a463d1cb58d24e04d2e04b0791ac6559861f99543daaa590e2636d040d611b40a50799bfb5c5304265d05e3658b5adf6b841a50ef6bf833d821
   languageName: node
   linkType: hard
 
@@ -9410,7 +9426,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"netra-react-native@workspace:.":
+"netra-react-native@workspace:*, netra-react-native@workspace:.":
   version: 0.0.0-use.local
   resolution: "netra-react-native@workspace:."
   dependencies:
@@ -9424,6 +9440,7 @@ __metadata:
     "@react-native/jest-preset": "npm:0.85.0"
     "@release-it/conventional-changelog": "npm:^11.0.1"
     "@types/react": "npm:^19.2.0"
+    "@types/react-native-uuid": "npm:^2.0.0"
     commitlint: "npm:^21.0.2"
     del-cli: "npm:^7.0.0"
     eslint: "npm:^9.39.4"
@@ -9436,6 +9453,9 @@ __metadata:
     react: "npm:19.2.3"
     react-native: "npm:0.85.0"
     react-native-builder-bob: "npm:^0.41.0"
+    react-native-get-random-values: "npm:^2.0.0"
+    react-native-logs: "npm:^5.6.0"
+    react-native-uuid: "npm:^2.0.4"
     react-native-web: "npm:~0.21.2"
     release-it: "npm:^20.2.0"
     turbo: "npm:^2.9.16"
@@ -10409,6 +10429,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-get-random-values@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "react-native-get-random-values@npm:2.0.0"
+  dependencies:
+    fast-base64-decode: "npm:^1.0.0"
+  peerDependencies:
+    react-native: ">=0.81"
+  checksum: 10c0/fd2e10ab3bca54bff8f5844e3314b797e02822e86663bc2dafe00a511b8a8e1c05d96aa0b8dc1ffad428387d44bbf458ce770a429858433d36f58a16e6e52986
+  languageName: node
+  linkType: hard
+
+"react-native-logs@npm:^5.6.0":
+  version: 5.6.0
+  resolution: "react-native-logs@npm:5.6.0"
+  checksum: 10c0/2532a965053819ae9209fe59c1e1511397425f86a98ce2f1a28b34bdf0618b055248c5b59b7d382d6a8e422b4c647601cd24f68b401a322f48ed2e6aaf5ce806
+  languageName: node
+  linkType: hard
+
 "react-native-monorepo-config@npm:^0.3.3":
   version: 0.3.5
   resolution: "react-native-monorepo-config@npm:0.3.5"
@@ -10445,16 +10483,25 @@ __metadata:
     "@react-native/typescript-config": "npm:0.85.0"
     "@types/react": "npm:^19.2.0"
     "@vitejs/plugin-react": "npm:^5.0.0"
+    netra-react-native: "workspace:*"
     react: "npm:19.2.3"
     react-dom: "npm:19.2.3"
     react-native: "npm:0.85.0"
     react-native-builder-bob: "npm:^0.43.0"
+    react-native-logs: "npm:^5.6.0"
     react-native-monorepo-config: "npm:^0.4.0"
     react-native-web: "npm:~0.21.2"
     vite: "npm:^7.1.1"
     vite-plugin-commonjs: "npm:^0.10.4"
   languageName: unknown
   linkType: soft
+
+"react-native-uuid@npm:*, react-native-uuid@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "react-native-uuid@npm:2.0.4"
+  checksum: 10c0/56bcf29fa59a3e4c6374e612d9adf4e2a5e7f1000e632451f0e4bf0fbeb00664eb8657a5af7e2adb64c435e96f42c535cc20529cffcc48a03581b41ba1761d2a
+  languageName: node
+  linkType: hard
 
 "react-native-web@npm:~0.21.2":
   version: 0.21.2

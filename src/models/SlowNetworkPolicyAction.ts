@@ -5,7 +5,9 @@ export abstract class SlowNetworkPolicyAction {
     this.identifier = identifier;
   }
 
-  static readonly useCache = new UseCachePolicyAction();
+  static useCache(): UseCachePolicyAction {
+    return new UseCachePolicyAction();
+  }
 
   static wait(delayMs: number): WaitPolicyAction {
     return new WaitPolicyAction(delayMs);

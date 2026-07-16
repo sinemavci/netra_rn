@@ -1,4 +1,4 @@
-enum ConverterType {
+export enum ConverterType {
   GSON = 'GSON',
   MOSHI = 'MOSHI',
   KOTLINX = 'KOTLINX',

@@ -5,6 +5,18 @@ export abstract class OfflinePolicyAction {
     this.identifier = identifier;
   }
 
+  static queue(): QueuePolicyAction {
+    return new QueuePolicyAction();
+  }
+
+  static useCache(): UseCacheOfflinePolicyAction {
+    return new UseCacheOfflinePolicyAction();
+  }
+
+  static throwError(): ThrowErrorPolicyAction {
+    return new ThrowErrorPolicyAction();
+  }
+
   static retry(retries: number, retryInterval: number): RetryPolicyAction {
     return new RetryPolicyAction(retries, retryInterval);
   }

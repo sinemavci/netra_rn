@@ -178,5 +178,11 @@
       "vite"
     ],
     "version": "0.63.0"
+  },
+  "dependencies": {
+    "@types/react-native-uuid": "^2.0.0",
+    "react-native-get-random-values": "^2.0.0",
+    "react-native-logs": "^5.6.0",
+    "react-native-uuid": "^2.0.4"
   }
 }

@@ -6,3 +6,5 @@ export { RequestBody } from './RequestBody';
 export { RequestBodyPart } from './RequestBodyPart';
 export { RequestOptions } from './RequestOptions';
 export { Response } from './Response';
+export { NetraClient } from './NetraClient';
+export { type ConverterType } from './ConverterType';

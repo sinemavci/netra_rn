@@ -1,22 +1,22 @@
 import { TurboModuleRegistry, type TurboModule } from 'react-native';
 
 export interface Spec extends TurboModule {
-  get(clientId: string, requestOptions: string): Promise<string | undefined>;
+  get(clientId: string, requestOptions: string): Promise<string>;
 
-  post(clientId: string, requestOptions: string): Promise<string | undefined>;
+  post(clientId: string, requestOptions: string): Promise<string>;
 
-  put(clientId: string, requestOptions: string): Promise<string | undefined>;
+  put(clientId: string, requestOptions: string): Promise<string>;
 
-  patch(clientId: string, requestOptions: string): Promise<string | undefined>;
+  patch(clientId: string, requestOptions: string): Promise<string>;
 
-  delete(clientId: string, requestOptions: string): Promise<string | undefined>;
+  delete(clientId: string, requestOptions: string): Promise<string>;
 
   build(
     baseUrl: string,
     convertedType?: string,
     headers?: string,
     circuitBreakerOptions?: string
-  ): Promise<string | undefined>;
+  ): Promise<string>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('NetraReactNative');

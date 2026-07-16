@@ -49,7 +49,7 @@ export class RequestBody {
       //
       // }),
       content: parts,
-      contentType = 'multipart/form-data',
+      contentType: 'multipart/form-data',
       isMultipart: true,
     });
   }
