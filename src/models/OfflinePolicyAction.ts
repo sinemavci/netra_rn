@@ -5,18 +5,14 @@ export abstract class OfflinePolicyAction {
     this.identifier = identifier;
   }
 
-  static readonly queue = new QueuePolicyAction();
-  static readonly useCache = new UseCacheOfflinePolicyAction();
-  static readonly throwError = new ThrowErrorPolicyAction();
-
-  static retry(retries: number, retryDelayMs: number): RetryPolicyAction {
-    return new RetryPolicyAction(retries, retryDelayMs);
+  static retry(retries: number, retryInterval: number): RetryPolicyAction {
+    return new RetryPolicyAction(retries, retryInterval);
   }
 
   static fromIdentifier(
     identifier: string,
     retries?: number,
-    retryDelayMs?: number
+    retryInterval?: number
   ): OfflinePolicyAction {
     switch (identifier) {
       case 'QUEUE':
@@ -26,7 +22,7 @@ export abstract class OfflinePolicyAction {
         return new UseCacheOfflinePolicyAction();
 
       case 'RETRY':
-        return new RetryPolicyAction(retries ?? 1, retryDelayMs ?? 2000);
+        return new RetryPolicyAction(retries ?? 1, retryInterval ?? 2000);
 
       case 'THROW_ERROR':
         return new ThrowErrorPolicyAction();
@@ -51,12 +47,12 @@ export class UseCacheOfflinePolicyAction extends OfflinePolicyAction {
 
 export class RetryPolicyAction extends OfflinePolicyAction {
   readonly retries: number;
-  readonly retryDelayMs: number;
+  readonly retryInterval: number;
 
-  constructor(retries: number, retryDelayMs: number) {
+  constructor(retries: number, retryInterval: number) {
     super('RETRY');
     this.retries = retries;
-    this.retryDelayMs = retryDelayMs;
+    this.retryInterval = retryInterval;
   }
 }
 
