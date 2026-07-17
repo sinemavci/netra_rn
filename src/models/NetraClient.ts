@@ -78,4 +78,24 @@ export class NetraClient {
     await this.ensureInitialized();
     return this.moduleHandler?.get(this.id, requestOptions);
   }
+
+  async put(requestOptions: RequestOptions) {
+    await this.ensureInitialized();
+    return this.moduleHandler?.put(this.id, requestOptions);
+  }
+
+  async post(requestOptions: RequestOptions) {
+    await this.ensureInitialized();
+    return this.moduleHandler?.post(this.id, requestOptions);
+  }
+
+  async patch(requestOptions: RequestOptions) {
+    await this.ensureInitialized();
+    return this.moduleHandler?.patch(this.id, requestOptions);
+  }
+
+  async delete(requestOptions: RequestOptions) {
+    await this.ensureInitialized();
+    return this.moduleHandler?.delete(this.id, requestOptions);
+  }
 }
