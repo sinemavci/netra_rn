@@ -9,9 +9,18 @@ import {
 } from 'netra-react-native';
 import { TextEncoder } from 'text-encoding';
 
+class Repo {
+  id: number;
+  name: string;
+  constructor(id: number, name: string) {
+    this.id = id;
+    this.name = name;
+  }
+}
+
 export default function App() {
   const client = new NetraClient({
-    baseUrl: 'http://10.0.2.2:3001',
+    baseUrl: 'https://api.github.com',
     // converterType: ConverterType.GSON,
   });
 
@@ -26,13 +35,15 @@ export default function App() {
         title="GET"
         onPress={async () => {
           const options = new RequestOptions({
-            url: '/?status=200&delay=1000',
+            url: '/users/octocat/repos',
             offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
             cancelOnDispose: true,
             slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
           });
-          const response = await client.get(options);
-          console.log('response.data:', response?.data);
+          const response = await client.get<Repo[]>(options);
+          response?.data?.forEach((item) => {
+            console.log('response.data:', item.name);
+          });
           console.log('response.statusCode:', response?.statusCode);
           console.log('response.statusMessage:', response?.statusMessage);
         }}

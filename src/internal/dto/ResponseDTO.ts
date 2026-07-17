@@ -2,16 +2,16 @@ import { Response } from '../../models/Response';
 import { BaseDTO } from './BaseDTO';
 
 export class ResponseDTO extends BaseDTO {
-  data?: Object;
+  data?: unknown;
   statusCode?: number;
   statusMessage?: string;
-  headers?: Map<string, string>;
+  headers?: Record<string, string>;
 
   constructor(
-    data?: Object,
+    data?: unknown,
     statusCode?: number,
     statusMessage?: string,
-    headers?: Map<string, string>
+    headers?: Record<string, string>
   ) {
     super();
     this.data = data;
@@ -20,7 +20,7 @@ export class ResponseDTO extends BaseDTO {
     this.headers = headers;
   }
 
-  static fromDataModel(model: Response) {
+  static fromDataModel<T>(model: Response<T>): ResponseDTO {
     return new ResponseDTO(
       model.data,
       model.statusCode,
@@ -39,8 +39,8 @@ export class ResponseDTO extends BaseDTO {
     );
   }
 
-  toDataModel(): Response {
-    return new Response({
+  toDataModel<T>(): Response<T> {
+    return Response.fromRaw<T>({
       data: this.data,
       statusCode: this.statusCode,
       statusMessage: this.statusMessage,

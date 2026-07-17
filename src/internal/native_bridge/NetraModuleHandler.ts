@@ -1,13 +1,13 @@
-import type { RequestOptions, Response } from '../../models';
+import { Response, type RequestOptions } from '../../models';
 import { RequestOptionsDTO } from '../dto/RequestOptionsDTO';
 import { ResponseDTO } from '../dto/ResponseDTO';
 import NetraReactNative from './NativeNetraReactNative';
 
 export class NetraModuleHandler {
-  async get(
+  async get<T>(
     clientId: string,
     requestOptions: RequestOptions
-  ): Promise<Response | undefined> {
+  ): Promise<Response<T> | undefined> {
     let response;
     try {
       const _requestOptions =
@@ -16,17 +16,17 @@ export class NetraModuleHandler {
         clientId,
         _requestOptions
       );
-      response = ResponseDTO.fromJSON(responseJson).toDataModel();
+      response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
     } catch (e) {
       console.error(e); //todo
     }
     return response;
   }
 
-  async post(
+  async post<T>(
     clientId: string,
     requestOptions: RequestOptions
-  ): Promise<Response | undefined> {
+  ): Promise<Response<T> | undefined> {
     let response;
     try {
       const _requestOptions =
@@ -35,17 +35,17 @@ export class NetraModuleHandler {
         clientId,
         _requestOptions
       );
-      response = ResponseDTO.fromJSON(responseJson).toDataModel();
+      response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
     } catch (e) {
       console.error(e); //todo
     }
     return response;
   }
 
-  async put(
+  async put<T>(
     clientId: string,
     requestOptions: RequestOptions
-  ): Promise<Response | undefined> {
+  ): Promise<Response<T> | undefined> {
     let response;
     try {
       const _requestOptions =
@@ -54,17 +54,17 @@ export class NetraModuleHandler {
         clientId,
         _requestOptions
       );
-      response = ResponseDTO.fromJSON(responseJson).toDataModel();
+      response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
     } catch (e) {
       console.error(e); //todo
     }
     return response;
   }
 
-  async patch(
+  async patch<T>(
     clientId: string,
     requestOptions: RequestOptions
-  ): Promise<Response | undefined> {
+  ): Promise<Response<T> | undefined> {
     let response;
     try {
       const _requestOptions =
@@ -73,17 +73,17 @@ export class NetraModuleHandler {
         clientId,
         _requestOptions
       );
-      response = ResponseDTO.fromJSON(responseJson).toDataModel();
+      response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
     } catch (e) {
       console.error(e); //todo
     }
     return response;
   }
 
-  async delete(
+  async delete<T>(
     clientId: string,
     requestOptions: RequestOptions
-  ): Promise<Response | undefined> {
+  ): Promise<Response<T> | undefined> {
     let response;
     try {
       const _requestOptions =
@@ -92,7 +92,7 @@ export class NetraModuleHandler {
         clientId,
         _requestOptions
       );
-      response = ResponseDTO.fromJSON(responseJson).toDataModel();
+      response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
     } catch (e) {
       console.error(e); //todo
     }
