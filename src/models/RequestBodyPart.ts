@@ -20,7 +20,7 @@ export class RequestBodyPart {
   static file(
     name: string,
     fileName: string,
-    bytes: Uint8Array | number[],
+    bytes: Uint8Array,
     contentType?: string
   ): RequestBodyPart {
     return new RequestBodyPart({

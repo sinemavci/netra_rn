@@ -28,11 +28,11 @@ export class RequestBody {
   }
 
   static createBytes(
-    bytes: Uint8Array | number[],
+    bytes: Uint8Array,
     contentType = 'application/json; charset=utf-8'
   ): RequestBody {
     return new RequestBody({
-      content: bytes,
+      content: Array.from(bytes),
       contentType,
     });
   }
