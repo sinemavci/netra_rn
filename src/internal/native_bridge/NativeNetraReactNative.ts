@@ -17,6 +17,11 @@ export interface Spec extends TurboModule {
     headers?: string,
     circuitBreakerOptions?: string
   ): Promise<string>;
+
+  getStream(clientId: string, requestOptions: string): void;
+
+  addListener(eventName: string): void;
+  removeListeners(count: number): void;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('NetraReactNative');

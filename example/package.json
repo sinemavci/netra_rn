@@ -12,6 +12,7 @@
     "build:web": "vite build"
   },
   "dependencies": {
+    "base64-arraybuffer": "^1.0.2",
     "netra-react-native": "workspace:*",
     "react": "19.2.3",
     "react-dom": "19.2.3",

@@ -1,6 +1,8 @@
 package com.netrareactnative
 
 import android.Manifest
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.example.netra_flutter.dto.CircuitBreakerOptionsDTO
@@ -19,11 +21,17 @@ import com.netra.library.converter.NetraKotlinxConverter
 import com.netra.library.converter.NetraMoshiConverter
 import com.netra.library.enums.OfflinePolicyAction
 import com.netra.library.enums.SlowNetworkPolicyAction
+import com.netrareactnative.observers.StreamObserver
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
   NativeNetraReactNativeSpec(reactContext) {
-
   val jsonConverter = Gson()
+  private val mainHandler = Handler(Looper.getMainLooper())
+
+  val streamObserverList: MutableMap<String, StreamObserver?> = mutableMapOf()
 
   @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
   override fun get(
@@ -361,6 +369,73 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
     //clientEventHandlers[client.id] = ClientEventHandler(binaryMessenger, client.id)
     promise?.resolve(client.id)
   }
+
+  @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+  override fun getStream(
+    clientId: String?,
+    requestOptions: String?,
+  ) {
+    val client = NetraClientList.getClients().find { it.id == clientId }
+    val requestOptionsDto = requestOptions.let {
+      Gson().fromJson(it, RequestOptionsDTO::class.java)
+    }
+    val offlinePolicyAction: OfflinePolicyAction? =
+      requestOptionsDto?.offlinePolicyAction?.toDataModel()
+    val slowNetworkPolicyAction: SlowNetworkPolicyAction? =
+      requestOptionsDto?.slowNetworkPolicyAction?.toDataModel()
+    val cache: Cache? = requestOptionsDto?.cacheOptions?.toDataModel()
+    val headers = requestOptionsDto?.headers
+    val path = requestOptionsDto.url
+    val cancelOnDispose = requestOptionsDto.cancelOnDispose
+
+    if (client != null) {
+      val requestBuilder =
+        client.get(path).addHeaders(headers ?: emptyMap()).asObject<Any>()
+      offlinePolicyAction?.let {
+        requestBuilder.whenOffline(offlinePolicyAction)
+      }
+      slowNetworkPolicyAction?.let {
+        requestBuilder.whenSlowNetwork(slowNetworkPolicyAction)
+      }
+      cache?.let {
+        requestBuilder.withCache(it)
+      }
+      cancelOnDispose?.let {
+        requestBuilder.cancelWhenDestroyed()
+      }
+      val requestId = requestOptionsDto.id
+      streamObserverList[requestId] = StreamObserver(reactContext)
+      Log.e("", "received in kt")
+
+      CoroutineScope(Dispatchers.IO).launch {
+        requestBuilder.executeStream(
+          onStreamReady = { inputStream ->
+            val buffer = ByteArray(8192)
+            var bytesRead: Int
+
+            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+              val chunk = buffer.copyOfRange(0, bytesRead)
+              mainHandler.post {
+                Log.e("", "chunk sended in kt: ${chunk}")
+                streamObserverList[requestId]?.sendChunk(chunk)
+              }
+            }
+            mainHandler.post {
+              streamObserverList[requestId]?.endOfStream()
+            }
+          },
+          onFailure = { exception ->
+            mainHandler.post {
+              streamObserverList[requestId]?.streamFailed()
+            }
+          })
+      }
+    }
+  }
+
+  override fun addListener(eventName: String?) {}
+
+  override fun removeListeners(count: Double) {}
 
   companion object {
     const val NAME = NativeNetraReactNativeSpec.NAME

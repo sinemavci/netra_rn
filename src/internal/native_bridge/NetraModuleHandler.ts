@@ -1,9 +1,12 @@
+import { NativeEventEmitter, NativeModules } from 'react-native';
 import { Response, type RequestOptions } from '../../models';
 import { RequestOptionsDTO } from '../dto/RequestOptionsDTO';
 import { ResponseDTO } from '../dto/ResponseDTO';
 import NetraReactNative from './NativeNetraReactNative';
 
 export class NetraModuleHandler {
+  private emitter = new NativeEventEmitter(NativeModules.NetraReactNative);
+
   async get<T>(
     clientId: string,
     requestOptions: RequestOptions
@@ -117,5 +120,49 @@ export class NetraModuleHandler {
       console.error(e); //todo
     }
     return clientId;
+  }
+
+  async *getStream(
+    clientId: string,
+    requestOptions: RequestOptions
+  ): AsyncGenerator<number[]> {
+    try {
+      const _requestOptions =
+        RequestOptionsDTO.fromDataModel(requestOptions).toJSONString();
+      const chunks: number[][] = [];
+      let done = false;
+      let error: Error | null = null;
+
+      this.emitter.addListener('netra_stream_data', (chunk) => {
+        chunks.push(JSON.parse(chunk as string) as number[]);
+      });
+
+      this.emitter.addListener('netra_stream_done', () => {
+        done = true;
+      });
+
+      this.emitter.addListener('netra_stream_error', (e) => {
+        console.log('error', e);
+        // error = new Error(e);
+        done = true;
+      });
+
+      NetraReactNative.getStream(clientId, _requestOptions);
+      while (!done) {
+        while (chunks.length > 0) {
+          yield chunks.shift()!;
+        }
+        await new Promise<void>((resolve) => {
+          setTimeout(() => resolve(), 16);
+        });
+      }
+
+      if (error) throw error;
+      while (chunks.length > 0) {
+        yield chunks.shift()!;
+      }
+    } catch (e) {
+      console.error(e); //todo
+    }
   }
 }

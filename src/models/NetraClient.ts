@@ -26,7 +26,7 @@ class Deferred<T = void> {
 
 export class NetraClient {
   private id = uuid.v4().toString();
-  private moduleHandler?: NetraModuleHandler = new NetraModuleHandler();
+  private moduleHandler: NetraModuleHandler = new NetraModuleHandler();
   private initDeferred = new Deferred<void>();
 
   baseUrl: string;
@@ -76,26 +76,31 @@ export class NetraClient {
 
   async get<T>(requestOptions: RequestOptions) {
     await this.ensureInitialized();
-    return this.moduleHandler?.get<T>(this.id, requestOptions);
+    return this.moduleHandler.get<T>(this.id, requestOptions);
   }
 
   async put<T>(requestOptions: RequestOptions) {
     await this.ensureInitialized();
-    return this.moduleHandler?.put<T>(this.id, requestOptions);
+    return this.moduleHandler.put<T>(this.id, requestOptions);
   }
 
   async post<T>(requestOptions: RequestOptions) {
     await this.ensureInitialized();
-    return this.moduleHandler?.post<T>(this.id, requestOptions);
+    return this.moduleHandler.post<T>(this.id, requestOptions);
   }
 
   async patch<T>(requestOptions: RequestOptions) {
     await this.ensureInitialized();
-    return this.moduleHandler?.patch<T>(this.id, requestOptions);
+    return this.moduleHandler.patch<T>(this.id, requestOptions);
   }
 
   async delete<T>(requestOptions: RequestOptions) {
     await this.ensureInitialized();
-    return this.moduleHandler?.delete<T>(this.id, requestOptions);
+    return this.moduleHandler.delete<T>(this.id, requestOptions);
+  }
+
+  async *getStream(requestOptions: RequestOptions): AsyncGenerator<number[]> {
+    await this.ensureInitialized();
+    yield* this.moduleHandler.getStream(this.id, requestOptions);
   }
 }
