@@ -2,39 +2,39 @@ import { RequestBody } from './RequestBody';
 
 export interface RequestBodyPartProps {
   name: string;
-  requestBody: RequestBody;
-  fileName?: string;
+  body: RequestBody;
+  filename?: string;
 }
 
 export class RequestBodyPart {
   name: string;
-  requestBody: RequestBody;
-  fileName?: string;
+  body: RequestBody;
+  filename?: string;
 
   constructor(props: RequestBodyPartProps) {
     this.name = props.name;
-    this.requestBody = props.requestBody;
-    this.fileName = props.fileName;
+    this.body = props.body;
+    this.filename = props.filename;
   }
 
   static file(
     name: string,
-    fileName: string,
+    filename: string,
     bytes: Uint8Array,
-    contentType?: string
+    contentType = 'image/jpeg'
   ): RequestBodyPart {
     return new RequestBodyPart({
       name: name,
-      fileName: fileName,
-      requestBody: RequestBody.createBytes(bytes, contentType),
+      filename: filename,
+      body: RequestBody.createBytes(bytes, contentType),
     });
   }
 
   static formData(name: string, value: string): RequestBodyPart {
     return new RequestBodyPart({
       name: name,
-      fileName: undefined,
-      requestBody: RequestBody.createJson(value, 'text/plain'),
+      filename: undefined,
+      body: RequestBody.createJson(value, 'text/plain'),
     });
   }
 }

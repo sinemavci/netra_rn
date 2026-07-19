@@ -20,8 +20,11 @@ data class RequestBodyDTO(
         return if (!isMultipart) {
             when (type) {
                 "map" -> NetraRequestBody.create(content as Map<String, Any?>)
-                "raw" -> NetraRequestBody.create((content as ArrayList<Int>).map { it.toByte() }
-                    .toByteArray(), contentType)
+                "raw" -> {
+                  val base64 = content as String
+                  val bytes = android.util.Base64.decode(base64, android.util.Base64.DEFAULT)
+                  NetraRequestBody.create(bytes, contentType)
+                }
 
                 else -> NetraRequestBody.create(content as String, contentType)
             }

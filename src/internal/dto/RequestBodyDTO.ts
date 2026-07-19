@@ -22,13 +22,25 @@ export class RequestBodyDTO extends BaseDTO {
 
   static fromDataModel(model: RequestBody) {
     let typeResult = 'json';
-    if (model.content instanceof Map) {
+    if (model.isMultipart) {
+      typeResult = 'multipart';
+    } else if (typeof model.content === 'string') {
+      if (
+        model.contentType?.includes('octet-stream') ||
+        model.contentType?.includes('image') ||
+        model.contentType?.includes('video')
+      ) {
+        typeResult = 'raw';
+      } else {
+        typeResult = 'json';
+      }
+    } else if (model.content instanceof Map) {
       typeResult = 'map';
     } else if (model.content instanceof Array) {
       typeResult = 'raw';
     }
     return new RequestBodyDTO(
-      model.content,
+      model.isMultipart ? JSON.stringify(model.content) : model.content,
       model.contentType,
       model.isMultipart,
       typeResult

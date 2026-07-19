@@ -4,21 +4,21 @@ import { RequestBodyDTO } from './RequestBodyDTO';
 
 export class RequestBodyPartDTO extends BaseDTO {
   name: string;
-  requestBody: RequestBodyDTO;
-  fileName?: string;
+  body: RequestBodyDTO;
+  filename?: string;
 
-  constructor(name: string, requestBody: RequestBodyDTO, fileName?: string) {
+  constructor(name: string, body: RequestBodyDTO, filename?: string) {
     super();
     this.name = name;
-    this.requestBody = requestBody;
-    this.fileName = fileName;
+    this.body = body;
+    this.filename = filename;
   }
 
   static fromDataModel(model: RequestBodyPart) {
     return new RequestBodyPartDTO(
       model.name,
-      RequestBodyDTO.fromDataModel(model.requestBody),
-      model.fileName
+      RequestBodyDTO.fromDataModel(model.body),
+      model.filename
     );
   }
 
@@ -26,24 +26,24 @@ export class RequestBodyPartDTO extends BaseDTO {
     const parsedJSON = JSON.parse(json);
     return new RequestBodyPartDTO(
       parsedJSON.name,
-      RequestBodyDTO.fromJSON(parsedJSON.requestBody),
-      parsedJSON.fileName
+      RequestBodyDTO.fromJSON(parsedJSON.body),
+      parsedJSON.filename
     );
   }
 
   toDataModel(): RequestBodyPart {
     return new RequestBodyPart({
       name: this.name,
-      requestBody: this.requestBody.toDataModel(),
-      fileName: this.fileName,
+      body: this.body.toDataModel(),
+      filename: this.filename,
     });
   }
 
   toJSON() {
     return {
       name: this.name,
-      requestBody: this.requestBody.toJSON(),
-      fileName: this.fileName,
+      body: this.body.toJSON(),
+      filename: this.filename,
     };
   }
 }

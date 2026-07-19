@@ -4,12 +4,15 @@ import {
   NetraClient,
   OfflinePolicyAction,
   RequestBody,
+  RequestBodyPart,
   RequestOptions,
   SlowNetworkPolicyAction,
 } from 'netra-react-native';
 import { TextEncoder } from 'text-encoding';
 import { encode } from 'base64-arraybuffer';
 import { useState } from 'react';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { RequestBodyPartDTO } from '../../src/internal/dto/RequestBodyPartDTO';
 
 class Repo {
   id: number;
@@ -130,6 +133,41 @@ export default function App() {
           console.log('stream finished', buffer.length);
           const arrayBuffer = Uint8Array.from(buffer).buffer;
           setBase64(encode(arrayBuffer));
+        }}
+      />
+      <Button
+        title="POST IMAGE"
+        onPress={async () => {
+          const result = await launchImageLibrary({
+            mediaType: 'photo',
+          });
+          if (result.didCancel || !result.assets?.[0]) return;
+
+          const asset = result.assets[0];
+          const uri = asset.uri!;
+          const fileName = asset.fileName ?? 'photo.jpg';
+          const type = asset.type ?? 'image/jpeg';
+
+          const imageResponse = await fetch(uri);
+          const arrayBuffer = await imageResponse.arrayBuffer();
+          const bytes = new Uint8Array(arrayBuffer);
+          const options = new RequestOptions({
+            url: '/upload',
+            body: RequestBody.multipart([
+              RequestBodyPart.file('image', fileName, bytes, type),
+            ]),
+            offlinePolicyAction: OfflinePolicyAction.retry(3, 4000),
+            slowNetworkPolicyAction: SlowNetworkPolicyAction.wait(2000),
+          });
+          const response = await localClient.post(options);
+          console.log('response.statusCode:', response?.statusCode);
+          console.log('response.statusMessage:', response?.statusMessage);
+          console.log(
+            'heree: ',
+            RequestBodyPartDTO.fromDataModel(
+              RequestBodyPart.file('image', fileName, bytes, type)
+            ).toJSONString()
+          );
         }}
       />
       <Image
