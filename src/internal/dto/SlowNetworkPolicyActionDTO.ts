@@ -1,3 +1,4 @@
+import { Duration } from '../../models';
 import {
   SlowNetworkPolicyAction,
   TimeoutPolicyAction,
@@ -27,8 +28,12 @@ export class SlowNetworkPolicyActionDTO extends BaseDTO {
   static fromDataModel(model: SlowNetworkPolicyAction) {
     return new SlowNetworkPolicyActionDTO(
       model.identifier,
-      model instanceof WaitPolicyAction ? model.delayMs : undefined,
-      model instanceof TimeoutPolicyAction ? model.timeoutMs : undefined,
+      model instanceof WaitPolicyAction
+        ? model.delay.totalMilliseconds
+        : undefined,
+      model instanceof TimeoutPolicyAction
+        ? model.timeout.totalMilliseconds
+        : undefined,
       model instanceof TimeoutPolicyAction ? 'MILLISECONDS' : undefined
     );
   }
@@ -46,8 +51,10 @@ export class SlowNetworkPolicyActionDTO extends BaseDTO {
   toDataModel(): SlowNetworkPolicyAction {
     return SlowNetworkPolicyAction.fromIdentifier(
       this.identifier,
-      this.delay,
-      this.timeout
+      this.delay !== undefined ? Duration.milliseconds(this.delay) : undefined,
+      this.timeout !== undefined
+        ? Duration.milliseconds(this.timeout)
+        : undefined
     );
   }
 

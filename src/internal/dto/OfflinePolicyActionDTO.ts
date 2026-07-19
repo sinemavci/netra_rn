@@ -1,3 +1,4 @@
+import { Duration } from '../../models';
 import {
   OfflinePolicyAction,
   RetryPolicyAction,
@@ -27,7 +28,9 @@ export class OfflinePolicyActionDTO extends BaseDTO {
     return new OfflinePolicyActionDTO(
       model.identifier,
       model instanceof RetryPolicyAction ? model.retries : undefined,
-      model instanceof RetryPolicyAction ? model.retryInterval : undefined,
+      model instanceof RetryPolicyAction
+        ? model.retryInterval.totalMilliseconds
+        : undefined,
       model instanceof RetryPolicyAction ? 'MILLISECONDS' : undefined
     );
   }
@@ -46,7 +49,9 @@ export class OfflinePolicyActionDTO extends BaseDTO {
     return OfflinePolicyAction.fromIdentifier(
       this.identifier,
       this.retries,
-      this.retryDuration
+      this.retryDuration !== undefined
+        ? Duration.milliseconds(this.retryDuration)
+        : undefined
     );
   }
 

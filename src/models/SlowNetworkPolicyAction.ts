@@ -1,3 +1,5 @@
+import { Duration } from './Duration';
+
 export abstract class SlowNetworkPolicyAction {
   readonly identifier: string;
 
@@ -9,28 +11,28 @@ export abstract class SlowNetworkPolicyAction {
     return new UseCachePolicyAction();
   }
 
-  static wait(delayMs: number): WaitPolicyAction {
-    return new WaitPolicyAction(delayMs);
+  static wait(delay: Duration): WaitPolicyAction {
+    return new WaitPolicyAction(delay);
   }
 
-  static timeout(timeoutMs: number): TimeoutPolicyAction {
-    return new TimeoutPolicyAction(timeoutMs);
+  static timeout(timeout: Duration): TimeoutPolicyAction {
+    return new TimeoutPolicyAction(timeout);
   }
 
   static fromIdentifier(
     identifier: string,
-    delayMs?: number,
-    timeoutMs?: number
+    delay?: Duration,
+    timeout?: Duration
   ): SlowNetworkPolicyAction {
     switch (identifier) {
       case 'USE_CACHE':
         return new UseCachePolicyAction();
 
       case 'WAIT':
-        return new WaitPolicyAction(delayMs ?? 1000);
+        return new WaitPolicyAction(delay ?? Duration.milliseconds(1000));
 
       case 'TIMEOUT':
-        return new TimeoutPolicyAction(timeoutMs ?? 1000);
+        return new TimeoutPolicyAction(timeout ?? Duration.milliseconds(1000));
 
       default:
         throw new Error(`Unknown slow network policy: ${identifier}`);
@@ -45,19 +47,19 @@ export class UseCachePolicyAction extends SlowNetworkPolicyAction {
 }
 
 export class WaitPolicyAction extends SlowNetworkPolicyAction {
-  readonly delayMs: number;
+  readonly delay: Duration;
 
-  constructor(delayMs: number) {
+  constructor(delay: Duration) {
     super('WAIT');
-    this.delayMs = delayMs;
+    this.delay = delay;
   }
 }
 
 export class TimeoutPolicyAction extends SlowNetworkPolicyAction {
-  readonly timeoutMs: number;
+  readonly timeout: Duration;
 
-  constructor(timeoutMs: number) {
+  constructor(timeout: Duration) {
     super('TIMEOUT');
-    this.timeoutMs = timeoutMs;
+    this.timeout = timeout;
   }
 }

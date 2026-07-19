@@ -1,6 +1,8 @@
 import 'react-native-get-random-values';
 import { View, StyleSheet, Button, Image } from 'react-native';
 import {
+  ConverterType,
+  Duration,
   NetraClient,
   OfflinePolicyAction,
   RequestBody,
@@ -27,17 +29,17 @@ export default function App() {
   const [base64, setBase64] = useState<string>();
   const client = new NetraClient({
     baseUrl: 'https://api.github.com',
-    // converterType: ConverterType.GSON,
+    converterType: ConverterType.GSON,
   });
 
   const localClient = new NetraClient({
     baseUrl: 'http://10.0.2.2:3001',
-    // converterType: ConverterType.GSON,
+    converterType: ConverterType.MOSHI,
   });
 
   const jsonPlaceholderClient = new NetraClient({
     baseUrl: 'https://jsonplaceholder.typicode.com',
-    // converterType: ConverterType.GSON,
+    converterType: ConverterType.KOTLINX,
   });
 
   return (
@@ -48,9 +50,12 @@ export default function App() {
           try {
             const options = new RequestOptions({
               url: '/users/octocat/repos',
-              offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
+              offlinePolicyAction: OfflinePolicyAction.retry(
+                4,
+                Duration.seconds(4)
+              ),
               cancelOnDispose: true,
-              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
+              // slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
             });
             const response = await client.get<Repo[]>(options);
             response?.data?.forEach((item) => {
@@ -69,18 +74,18 @@ export default function App() {
           try {
             const options = new RequestOptions({
               url: '/?status=200&delay=3000',
-              offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
+              offlinePolicyAction: OfflinePolicyAction.queue(),
               cancelOnDispose: true,
-              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
+              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(
+                Duration.days(1)
+              ),
             });
-            const response = await localClient.get<Repo[]>(options);
-            response?.data?.forEach((item) => {
-              console.log('response.data:', item.name);
-            });
+            const response = await localClient.get(options);
+            console.log('response.data:', response?.data);
             console.log('response.statusCode:', response?.statusCode);
             console.log('response.statusMessage:', response?.statusMessage);
           } catch (e) {
-            console.log('error in example', e);
+            console.log('error in example HERE', e);
           }
         }}
       />
@@ -90,9 +95,14 @@ export default function App() {
           try {
             const options = new RequestOptions({
               url: '/users',
-              offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
+              offlinePolicyAction: OfflinePolicyAction.retry(
+                4,
+                Duration.seconds(4)
+              ),
               cancelOnDispose: true,
-              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
+              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(
+                Duration.milliseconds(5)
+              ),
               body: RequestBody.createJson(
                 JSON.stringify(
                   Object.fromEntries(
@@ -116,9 +126,14 @@ export default function App() {
           try {
             const options = new RequestOptions({
               url: '/users/1',
-              offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
+              offlinePolicyAction: OfflinePolicyAction.retry(
+                4,
+                Duration.seconds(4)
+              ),
               cancelOnDispose: true,
-              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
+              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(
+                Duration.milliseconds(5000)
+              ),
               body: RequestBody.createBytes(
                 new TextEncoder().encode(
                   JSON.stringify({ name: 'Sinem', job: 'mobile developer' })
@@ -140,9 +155,14 @@ export default function App() {
           try {
             const options = new RequestOptions({
               url: '/users/1',
-              offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
+              offlinePolicyAction: OfflinePolicyAction.retry(
+                4,
+                Duration.milliseconds(4000)
+              ),
               cancelOnDispose: true,
-              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
+              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(
+                Duration.seconds(5)
+              ),
             });
             const response = await jsonPlaceholderClient.delete(options);
             console.log('response.data:', response?.data);
@@ -158,9 +178,14 @@ export default function App() {
         onPress={async () => {
           const options = new RequestOptions({
             url: '/image',
-            offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
+            offlinePolicyAction: OfflinePolicyAction.retry(
+              4,
+              Duration.seconds(4)
+            ),
             cancelOnDispose: true,
-            slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
+            slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(
+              Duration.seconds(5)
+            ),
           });
           const buffer: number[] = [];
           for await (const chunk of localClient.getStream(options)) {
@@ -193,8 +218,13 @@ export default function App() {
             body: RequestBody.multipart([
               RequestBodyPart.file('image', fileName, bytes, type),
             ]),
-            offlinePolicyAction: OfflinePolicyAction.retry(3, 4000),
-            slowNetworkPolicyAction: SlowNetworkPolicyAction.wait(2000),
+            offlinePolicyAction: OfflinePolicyAction.retry(
+              3,
+              Duration.seconds(4)
+            ),
+            slowNetworkPolicyAction: SlowNetworkPolicyAction.wait(
+              Duration.seconds(2)
+            ),
           });
           try {
             const response = await localClient.post(options);

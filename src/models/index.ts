@@ -8,3 +8,4 @@ export { RequestOptions } from './RequestOptions';
 export { Response } from './Response';
 export { NetraClient } from './NetraClient';
 export { ConverterType } from './ConverterType';
+export { Duration } from './Duration';

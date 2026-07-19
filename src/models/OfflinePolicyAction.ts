@@ -1,3 +1,5 @@
+import { Duration } from './Duration';
+
 export abstract class OfflinePolicyAction {
   readonly identifier: string;
 
@@ -17,14 +19,14 @@ export abstract class OfflinePolicyAction {
     return new ThrowErrorPolicyAction();
   }
 
-  static retry(retries: number, retryInterval: number): RetryPolicyAction {
+  static retry(retries: number, retryInterval: Duration): RetryPolicyAction {
     return new RetryPolicyAction(retries, retryInterval);
   }
 
   static fromIdentifier(
     identifier: string,
     retries?: number,
-    retryInterval?: number
+    retryInterval?: Duration
   ): OfflinePolicyAction {
     switch (identifier) {
       case 'QUEUE':
@@ -34,7 +36,10 @@ export abstract class OfflinePolicyAction {
         return new UseCacheOfflinePolicyAction();
 
       case 'RETRY':
-        return new RetryPolicyAction(retries ?? 1, retryInterval ?? 2000);
+        return new RetryPolicyAction(
+          retries ?? 1,
+          retryInterval ?? Duration.milliseconds(2000)
+        );
 
       case 'THROW_ERROR':
         return new ThrowErrorPolicyAction();
@@ -59,9 +64,9 @@ export class UseCacheOfflinePolicyAction extends OfflinePolicyAction {
 
 export class RetryPolicyAction extends OfflinePolicyAction {
   readonly retries: number;
-  readonly retryInterval: number;
+  readonly retryInterval: Duration;
 
-  constructor(retries: number, retryInterval: number) {
+  constructor(retries: number, retryInterval: Duration) {
     super('RETRY');
     this.retries = retries;
     this.retryInterval = retryInterval;
