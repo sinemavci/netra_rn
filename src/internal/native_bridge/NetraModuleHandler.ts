@@ -3,6 +3,7 @@ import { Response, type RequestOptions } from '../../models';
 import { RequestOptionsDTO } from '../dto/RequestOptionsDTO';
 import { ResponseDTO } from '../dto/ResponseDTO';
 import NetraReactNative from './NativeNetraReactNative';
+import { ExceptionManager } from '../../exceptions/ExceptionManager';
 
 export class NetraModuleHandler {
   private emitter = new NativeEventEmitter(NativeModules.NetraReactNative);
@@ -21,7 +22,7 @@ export class NetraModuleHandler {
       );
       response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
     } catch (e) {
-      console.error(e); //todo
+      throw ExceptionManager.parse(e);
     }
     return response;
   }
@@ -40,7 +41,7 @@ export class NetraModuleHandler {
       );
       response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
     } catch (e) {
-      console.error(e); //todo
+      throw ExceptionManager.parse(e);
     }
     return response;
   }
@@ -57,9 +58,10 @@ export class NetraModuleHandler {
         clientId,
         _requestOptions
       );
+      console.log('responseJson', responseJson);
       response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
     } catch (e) {
-      console.error(e); //todo
+      throw ExceptionManager.parse(e);
     }
     return response;
   }
@@ -78,7 +80,7 @@ export class NetraModuleHandler {
       );
       response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
     } catch (e) {
-      console.error(e); //todo
+      throw ExceptionManager.parse(e);
     }
     return response;
   }
@@ -97,7 +99,7 @@ export class NetraModuleHandler {
       );
       response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
     } catch (e) {
-      console.error(e); //todo
+      throw ExceptionManager.parse(e);
     }
     return response;
   }
@@ -117,7 +119,7 @@ export class NetraModuleHandler {
         circuitBreakerOptions
       );
     } catch (e) {
-      console.error(e); //todo
+      throw ExceptionManager.parse(e);
     }
     return clientId;
   }
@@ -162,7 +164,7 @@ export class NetraModuleHandler {
         yield chunks.shift()!;
       }
     } catch (e) {
-      console.error(e); //todo
+      throw ExceptionManager.parse(e);
     }
   }
 }

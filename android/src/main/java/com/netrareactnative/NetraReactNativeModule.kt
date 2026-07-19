@@ -85,7 +85,7 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
       } else {
         promise?.reject(Exception("Client not found!"))
       }
-    } catch (e: Error) {
+    } catch (e: Exception) {
       promise?.reject(e)
     }
   }
@@ -136,13 +136,13 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
               )
             )
           } else if (exception != null) {
-            promise?.reject(exception)
+            promise?.reject(exception::class.qualifiedName, exception.message)
           }
         }
       } else {
         promise?.reject(Exception("Client not found!"))
       }
-    } catch (e: Error) {
+    } catch (e: Exception) {
       promise?.reject(Exception(e))
     }
   }
@@ -200,7 +200,7 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
       } else {
         promise?.reject(Exception("Client not found!"))
       }
-    } catch (e: Error) {
+    } catch (e: Exception) {
       promise?.reject(Exception(e))
     }
   }
@@ -319,7 +319,7 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
       } else {
         promise?.reject(Exception("Client not found!"))
       }
-    } catch (e: Error) {
+    } catch (e: Exception) {
       promise?.reject(Exception(e))
     }
   }

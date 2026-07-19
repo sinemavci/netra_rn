@@ -43,77 +43,114 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Button
-        title="GET"
+        title="GET REPO"
         onPress={async () => {
-          const options = new RequestOptions({
-            url: '/users/octocat/repos',
-            offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
-            cancelOnDispose: true,
-            slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
-          });
-          const response = await client.get<Repo[]>(options);
-          response?.data?.forEach((item) => {
-            console.log('response.data:', item.name);
-          });
-          console.log('response.statusCode:', response?.statusCode);
-          console.log('response.statusMessage:', response?.statusMessage);
+          try {
+            const options = new RequestOptions({
+              url: '/users/octocat/repos',
+              offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
+              cancelOnDispose: true,
+              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
+            });
+            const response = await client.get<Repo[]>(options);
+            response?.data?.forEach((item) => {
+              console.log('response.data:', item.name);
+            });
+            console.log('response.statusCode:', response?.statusCode);
+            console.log('response.statusMessage:', response?.statusMessage);
+          } catch (e) {
+            console.log('error in example', e);
+          }
+        }}
+      />
+      <Button
+        title="GET LOCAL"
+        onPress={async () => {
+          try {
+            const options = new RequestOptions({
+              url: '/?status=200&delay=3000',
+              offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
+              cancelOnDispose: true,
+              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
+            });
+            const response = await localClient.get<Repo[]>(options);
+            response?.data?.forEach((item) => {
+              console.log('response.data:', item.name);
+            });
+            console.log('response.statusCode:', response?.statusCode);
+            console.log('response.statusMessage:', response?.statusMessage);
+          } catch (e) {
+            console.log('error in example', e);
+          }
         }}
       />
       <Button
         title="POST"
         onPress={async () => {
-          const options = new RequestOptions({
-            url: '/users',
-            offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
-            cancelOnDispose: true,
-            slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
-            body: RequestBody.createJson(
-              JSON.stringify(
-                Object.fromEntries(
-                  new Map().set('name', 'Sinem').set('job', 'badeveloperr')
+          try {
+            const options = new RequestOptions({
+              url: '/users',
+              offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
+              cancelOnDispose: true,
+              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
+              body: RequestBody.createJson(
+                JSON.stringify(
+                  Object.fromEntries(
+                    new Map().set('name', 'Sinem').set('job', 'badeveloperr')
+                  )
                 )
-              )
-            ),
-          });
-          const response = await jsonPlaceholderClient.post(options);
-          console.log('response.data:', response?.data);
-          console.log('response.statusCode:', response?.statusCode);
-          console.log('response.statusMessage:', response?.statusMessage);
+              ),
+            });
+            const response = await jsonPlaceholderClient.post(options);
+            console.log('response.data:', response?.data);
+            console.log('response.statusCode:', response?.statusCode);
+            console.log('response.statusMessage:', response?.statusMessage);
+          } catch (e) {
+            console.log('error', e);
+          }
         }}
       />
       <Button
         title="PUT"
         onPress={async () => {
-          const options = new RequestOptions({
-            url: '/users/1',
-            offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
-            cancelOnDispose: true,
-            slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
-            body: RequestBody.createBytes(
-              new TextEncoder().encode(
-                JSON.stringify({ name: 'Sinem', job: 'mobile developer' })
-              )
-            ),
-          });
-          const response = await jsonPlaceholderClient.put(options);
-          console.log('response.data:', response?.data);
-          console.log('response.statusCode:', response?.statusCode);
-          console.log('response.statusMessage:', response?.statusMessage);
+          try {
+            const options = new RequestOptions({
+              url: '/users/1',
+              offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
+              cancelOnDispose: true,
+              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
+              body: RequestBody.createBytes(
+                new TextEncoder().encode(
+                  JSON.stringify({ name: 'Sinem', job: 'mobile developer' })
+                )
+              ),
+            });
+            const response = await jsonPlaceholderClient.put(options);
+            console.log('response.data:', response?.data);
+            console.log('response.statusCode:', response?.statusCode);
+            console.log('response.statusMessage:', response?.statusMessage);
+          } catch (e) {
+            console.log('error in example:', e);
+          }
         }}
       />
       <Button
         title="DELETE"
         onPress={async () => {
-          const options = new RequestOptions({
-            url: '/users/1',
-            offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
-            cancelOnDispose: true,
-            slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
-          });
-          const response = await jsonPlaceholderClient.delete(options);
-          console.log('response.data:', response?.data);
-          console.log('response.statusCode:', response?.statusCode);
-          console.log('response.statusMessage:', response?.statusMessage);
+          try {
+            const options = new RequestOptions({
+              url: '/users/1',
+              offlinePolicyAction: OfflinePolicyAction.retry(4, 4000),
+              cancelOnDispose: true,
+              slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(5),
+            });
+            const response = await jsonPlaceholderClient.delete(options);
+            console.log('response.data:', response?.data);
+            console.log('response.statusCode:', response?.statusCode);
+            console.log('response.statusMessage:', response?.statusMessage);
+          } catch (e) {
+            console.log('error', e);
+          }
         }}
       />
       <Button
@@ -159,15 +196,19 @@ export default function App() {
             offlinePolicyAction: OfflinePolicyAction.retry(3, 4000),
             slowNetworkPolicyAction: SlowNetworkPolicyAction.wait(2000),
           });
-          const response = await localClient.post(options);
-          console.log('response.statusCode:', response?.statusCode);
-          console.log('response.statusMessage:', response?.statusMessage);
-          console.log(
-            'heree: ',
-            RequestBodyPartDTO.fromDataModel(
-              RequestBodyPart.file('image', fileName, bytes, type)
-            ).toJSONString()
-          );
+          try {
+            const response = await localClient.post(options);
+            console.log('response.statusCode:', response?.statusCode);
+            console.log('response.statusMessage:', response?.statusMessage);
+            console.log(
+              'heree: ',
+              RequestBodyPartDTO.fromDataModel(
+                RequestBodyPart.file('image', fileName, bytes, type)
+              ).toJSONString()
+            );
+          } catch (e) {
+            console.log('error in example: ', e);
+          }
         }}
       />
       <Image
