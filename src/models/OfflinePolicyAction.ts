@@ -9,7 +9,7 @@ export abstract class OfflinePolicyAction {
     return new QueuePolicyAction();
   }
 
-  static useCache(): UseCacheOfflinePolicyAction {
+  static cache(): UseCacheOfflinePolicyAction {
     return new UseCacheOfflinePolicyAction();
   }
 

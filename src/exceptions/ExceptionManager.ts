@@ -24,19 +24,18 @@ export class ExceptionManager {
       Object.prototype.hasOwnProperty.call(error, 'name') ||
       Object.prototype.hasOwnProperty.call(error, 'code')
     ) {
-      console.log('parse error', error.code);
-      if (error.code === ExceptionManager.e_NetraConnectionException) {
-        return new NetraConnectionException(error.code, error.message);
-      } else if (error.code === ExceptionManager.e_NetraDnsException) {
-        return new NetraDnsException(error.code, error.message);
-      } else if (error.code === ExceptionManager.e_NetraNetworkException) {
-        return new NetraNetworkException(error.code, error.message);
-      } else if (error.code === ExceptionManager.e_NetraSocketException) {
-        return new NetraSocketException(error.code, error.message);
-      } else if (error.code === ExceptionManager.e_NetraSslException) {
-        return new NetraSslException(error.code, error.message);
-      } else if (error.code === ExceptionManager.e_NetraTimeoutException) {
-        return new NetraTimeoutException(error.code, error.message);
+      if (error.name === ExceptionManager.e_NetraConnectionException) {
+        return new NetraConnectionException(error.message);
+      } else if (error.name === ExceptionManager.e_NetraDnsException) {
+        return new NetraDnsException(error.message);
+      } else if (error.name === ExceptionManager.e_NetraNetworkException) {
+        return new NetraNetworkException(error.message);
+      } else if (error.name === ExceptionManager.e_NetraSocketException) {
+        return new NetraSocketException(error.message);
+      } else if (error.name === ExceptionManager.e_NetraSslException) {
+        return new NetraSslException(error.message);
+      } else if (error.name === ExceptionManager.e_NetraTimeoutException) {
+        return new NetraTimeoutException(error.message);
       } else {
         return error;
       }

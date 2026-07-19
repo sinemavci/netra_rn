@@ -5,7 +5,7 @@ export abstract class SlowNetworkPolicyAction {
     this.identifier = identifier;
   }
 
-  static useCache(): UseCachePolicyAction {
+  static cache(): UseCachePolicyAction {
     return new UseCachePolicyAction();
   }
 
