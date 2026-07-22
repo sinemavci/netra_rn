@@ -1,13 +1,12 @@
 {
-  "extends": "../tsconfig.json",
+  "exclude": ["../node_modules", "../example/node_modules"],
+  "extends": "@react-native/typescript-config",
   "compilerOptions": {
-    "baseUrl": ".",
-    "rootDir": "../..",
     "paths": {
-      "netra-react-native": ["../src/index"],
+      "netra-react-native": [
+        "../src/index"
+      ]
     }
   },
-  "jsx": "react",
-  "include": ["./**/*"],
-  "exclude": ["../node_modules", "../example/node_modules"]
+  "include": ["./**/*"]
 }
