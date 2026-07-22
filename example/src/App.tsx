@@ -12,7 +12,7 @@ import {
 } from 'netra-react-native';
 import { TextEncoder } from 'text-encoding';
 import { encode } from 'base64-arraybuffer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { RequestBodyPartDTO } from '../../src/internal/dto/RequestBodyPartDTO';
 
@@ -25,6 +25,15 @@ class Repo {
   }
 }
 
+console.log({
+  View,
+  Button,
+  Image,
+  NetraClient,
+  ConverterType,
+  Duration,
+});
+
 export default function App() {
   const [base64, setBase64] = useState<string>();
   const client = new NetraClient({
@@ -32,6 +41,7 @@ export default function App() {
     converterType: ConverterType.GSON,
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const localClient = new NetraClient({
     baseUrl: 'http://10.0.2.2:3001',
     converterType: ConverterType.MOSHI,
@@ -41,6 +51,24 @@ export default function App() {
     baseUrl: 'https://jsonplaceholder.typicode.com',
     converterType: ConverterType.KOTLINX,
   });
+
+  useEffect(() => {
+    console.log('attached on method to local client');
+    localClient
+      .on('RequestExecuted', (result) => {
+        console.log('RequestExecuted:', result.request.id);
+      })
+      .then();
+    localClient
+      .on('RequestSuccess', ({ request, response }) => {
+        console.log(
+          'RequestSuccess request.offlinePolicyAction?.identifier:',
+          request.offlinePolicyAction?.identifier
+        );
+        console.log('RequestSuccess response.statusCode:', response.statusCode);
+      })
+      .then();
+  }, [localClient]);
 
   return (
     <View style={styles.container}>
@@ -243,6 +271,7 @@ export default function App() {
       />
       <Image
         source={{ uri: `data:image/jpeg;base64,${base64}` }}
+        // eslint-disable-next-line react-native/no-inline-styles
         style={{ width: 300, height: 150 }}
       />
     </View>

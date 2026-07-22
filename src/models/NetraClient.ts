@@ -3,6 +3,12 @@ import { CircuitBreakerOptions, type ConverterType, RequestOptions } from '.';
 import 'react-native-get-random-values';
 import uuid from 'react-native-uuid';
 import { CircuitBreakerOptionsDTO } from '../internal/dto/CircuitBreakerOptionsDTO';
+import type { ObserverCallback } from '../observers/ObserverListener';
+import {
+  ClientObserver,
+  type ClientEventAllowedType,
+  type ClientEventResponse,
+} from '../observers/ClientObserver';
 
 export interface NetraClientProps {
   baseUrl: string;
@@ -28,6 +34,7 @@ export class NetraClient {
   private id = uuid.v4().toString();
   private moduleHandler: NetraModuleHandler = new NetraModuleHandler();
   private initDeferred = new Deferred<void>();
+  private clientObserver: ClientObserver | undefined = undefined;
 
   baseUrl: string;
   converterType?: ConverterType;
@@ -60,8 +67,7 @@ export class NetraClient {
 
       if (clientId) {
         this.id = clientId;
-        //todo
-        // this.observer = new ClientObserver({ clientId });
+        this.clientObserver = new ClientObserver(clientId);
       }
 
       this.initDeferred.resolve();
@@ -102,5 +108,33 @@ export class NetraClient {
   async *getStream(requestOptions: RequestOptions): AsyncGenerator<number[]> {
     await this.ensureInitialized();
     yield* this.moduleHandler.getStream(this.id, requestOptions);
+  }
+
+  async on<T extends ClientEventAllowedType>(
+    eventName: T,
+    callback: ObserverCallback<ClientEventResponse[T]>
+  ) {
+    await this.ensureInitialized();
+    const eventId = this.clientObserver?.on(
+      eventName as ClientEventAllowedType,
+      callback as any
+    );
+    if (eventId !== undefined) {
+      this.moduleHandler.on(this.id, eventId, eventName);
+    }
+  }
+
+  async off<T extends ClientEventAllowedType>(
+    eventName: T,
+    callback: ObserverCallback<ClientEventResponse[T]>
+  ) {
+    await this.ensureInitialized();
+    const eventId = this.clientObserver?.off(
+      eventName as ClientEventAllowedType,
+      callback as any
+    );
+    if (eventId !== undefined) {
+      this.moduleHandler.off(this.id, eventId);
+    }
   }
 }

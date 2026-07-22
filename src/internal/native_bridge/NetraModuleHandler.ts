@@ -167,4 +167,22 @@ export class NetraModuleHandler {
       throw ExceptionManager.parse(e);
     }
   }
+
+  async on(clientId: string, eventId: string, eventName: string) {
+    try {
+      NetraReactNative.on(clientId, eventName, eventId);
+    } catch (e) {
+      throw ExceptionManager.parse(e);
+    }
+    return clientId;
+  }
+
+  async off(clientId: string, eventId: string) {
+    try {
+      NetraReactNative.off(clientId, eventId);
+    } catch (e) {
+      throw ExceptionManager.parse(e);
+    }
+    return clientId;
+  }
 }

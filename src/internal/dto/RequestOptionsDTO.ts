@@ -65,20 +65,22 @@ export class RequestOptionsDTO extends BaseDTO {
       parsedJSON.id,
       parsedJSON.url,
       parsedJSON.offlinePolicyAction !== undefined
-        ? OfflinePolicyActionDTO.fromJSON(parsedJSON.offlinePolicyAction)
+        ? OfflinePolicyActionDTO.fromJSON(
+            JSON.stringify(parsedJSON.offlinePolicyAction)
+          )
         : undefined,
       parsedJSON.slowNetworkPolicyAction !== undefined
         ? SlowNetworkPolicyActionDTO.fromJSON(
-            parsedJSON.slowNetworkPolicyAction
+            JSON.stringify(parsedJSON.slowNetworkPolicyAction)
           )
         : undefined,
       parsedJSON.cacheOptions !== undefined
-        ? CacheOptionsDTO.fromJSON(parsedJSON.cacheOptions)
+        ? CacheOptionsDTO.fromJSON(JSON.stringify(parsedJSON.cacheOptions))
         : undefined,
       parsedJSON.headers,
       parsedJSON.cancelOnDispose,
       parsedJSON.body !== undefined
-        ? RequestBodyDTO.fromJSON(parsedJSON.body)
+        ? RequestBodyDTO.fromJSON(JSON.stringify(parsedJSON.body))
         : undefined
     );
   }

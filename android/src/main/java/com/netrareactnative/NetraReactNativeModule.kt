@@ -21,10 +21,13 @@ import com.netra.library.converter.NetraKotlinxConverter
 import com.netra.library.converter.NetraMoshiConverter
 import com.netra.library.enums.OfflinePolicyAction
 import com.netra.library.enums.SlowNetworkPolicyAction
+import com.netrareactnative.observers.ClientObserver
 import com.netrareactnative.observers.StreamObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.text.contains
+import kotlin.text.get
 
 class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
   NativeNetraReactNativeSpec(reactContext) {
@@ -32,6 +35,7 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
   private val mainHandler = Handler(Looper.getMainLooper())
 
   val streamObserverList: MutableMap<String, StreamObserver?> = mutableMapOf()
+  val clientObserverList: MutableMap<String, ClientObserver?> = mutableMapOf()
 
   @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
   override fun get(
@@ -363,10 +367,7 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
     }
 
     val client = clientBuilder.build()
-    Log.e("", "client id in built: ${client.id}")
     NetraClientList.add(client)
-    //todo
-    //clientEventHandlers[client.id] = ClientEventHandler(binaryMessenger, client.id)
     promise?.resolve(client.id)
   }
 
@@ -431,6 +432,49 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
           })
       }
     }
+  }
+
+  override fun on(
+    clientId: String?,
+    eventName: String?,
+    eventId: String?,
+    promise: Promise?
+  ) {
+    if (eventId != null && eventName != null && clientId != null) {
+      if (clientObserverList.contains(clientId)) {
+      clientObserverList[clientId]?.on(
+        eventName,
+        eventId
+      )
+    } else {
+        val obs = ClientObserver(reactContext, clientId)
+        clientObserverList[clientId] = obs
+        obs.on(eventName, eventId)
+        val client = NetraClientList.getClients().find { client -> client.id == clientId }
+        client?.addObserver(obs)
+      }
+    }
+    promise?.resolve(true);
+  }
+
+  override fun off(
+    clientId: String?,
+    eventId: String?,
+    promise: Promise?
+  ) {
+    if (eventId != null && clientId != null) {
+      val observer = clientObserverList[clientId]
+      observer?.let {
+        it.off(eventId)
+        if (it.hasNoListeners()) {
+          val client =
+            NetraClientList.getClients().find { client -> client.id == clientId }
+          client?.removeObserver(it)
+          clientObserverList.remove(clientId)
+        }
+      }
+    }
+    promise?.resolve(true);
   }
 
   override fun addListener(eventName: String?) {}

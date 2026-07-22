@@ -20,6 +20,9 @@ export interface Spec extends TurboModule {
 
   getStream(clientId: string, requestOptions: string): void;
 
+  on(clientId: string, eventName: string, eventId: string): Promise<number>;
+  off(clientId: string, eventId: string): Promise<number>;
+
   addListener(eventName: string): void;
   removeListeners(count: number): void;
 }
