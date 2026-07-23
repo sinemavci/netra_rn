@@ -14,23 +14,19 @@ Netra focuses on building resilient network communication by providing built-in 
 
 | Feature | Netra | Axios |
 |---|---|---|
-| Platform | React Native | JavaScript / React Native |
-| API Style | TypeScript SDK | Promise-based HTTP client |
-| GET / POST / PUT / PATCH / DELETE | ✅ | ✅ |
-| Type-safe API | ✅ Built-in TypeScript API | ⚠️ Requires manual typing |
-| Request Interceptors | ✅ Observer-based lifecycle system | ✅ Interceptors |
+| HTTP Methods | ✅ | ✅ |
+| TypeScript Support | ✅ SDK-level types | ✅ Type definitions |
+| Request Interceptors | ✅ | ✅ |
 | Response Interceptors | ✅ | ✅ |
-| Offline Request Queue | ✅ Built-in | ❌ Requires custom implementation |
-| Automatic Queue Restoration | ✅ | ❌ Requires custom implementation |
-| Retry Strategy | ✅ Built-in policies | ⚠️ Requires interceptor/custom logic |
-| Slow Network Handling | ✅ Built-in policies | ❌ Requires custom implementation |
-| Request Lifecycle Events | ✅ First-class feature | ⚠️ Usually implemented manually |
-| Streaming Support | ✅ Async stream API | ⚠️ Depends on environment |
+| Offline Request Queue | ✅ Built-in | ❌ Custom implementation required |
+| Queued Request Restoration | ✅ Built-in | ❌ Custom implementation required |
+| Retry Policies | ✅ Built-in | ⚠️ Requires interceptor/plugin |
+| Slow Network Strategies | ✅ Built-in | ⚠️ Custom handling required |
+| Request Lifecycle Events | ✅ Observer system | ⚠️ Interceptors |
+| Streaming API | ✅ Async stream API | ⚠️ Environment dependent |
 | Multipart Upload | ✅ | ✅ |
-| Multiple Converter Support | ✅ Kotlinx, Gson, Moshi | ⚠️ Manual transformation |
-| Native Networking Layer | ✅ Native implementation | JavaScript based HTTP client |
-
----
+| Serialization Support | ✅ Kotlinx / Gson / Moshi | ✅ Transformers |
+| Network Resilience Features | ✅ First-class | ⚠️ Application level |
 
 ## When to Choose Netra?
 
