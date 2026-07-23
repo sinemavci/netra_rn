@@ -1,97 +1,322 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Netra React Native
 
-# Getting Started
+Advanced networking SDK for React Native applications with offline support, slow network strategies, request lifecycle monitoring and streaming capabilities.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+Netra provides a modern TypeScript API while leveraging native networking capabilities underneath.
 
-## Step 1: Start Metro
+## Features
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- 🚀 HTTP methods: GET, POST, PUT, PATCH, DELETE
+- 📦 Offline request queue
+- 🔄 Automatic retry strategies
+- 🐌 Slow network handling
+- ⚡ Request lifecycle observers
+- 💾 Smart caching support
+- 🌊 Streaming response support
+- 📤 Multipart upload support
+- 🔌 Native Android/iOS networking layer
+- 🧩 Multiple converter support
+- 🔒 Type-safe TypeScript API
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+---
 
-```sh
-# Using npm
-npm start
+## Installation
 
-# OR using Yarn
-yarn start
+```bash
+npm install netra-react-native
 ```
 
-## Step 2: Build and run your app
+or
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```bash
+yarn add netra-react-native
 ```
 
-### iOS
+---
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+## Basic Usage
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+```typescript
+import {
+  NetraClient,
+  RequestOptions,
+  ConverterType,
+} from 'netra-react-native';
 
-```sh
-bundle install
+
+const client = new NetraClient({
+  baseUrl: 'https://api.example.com',
+  converterType: ConverterType.KOTLINX,
+});
+
+
+const response = await client.get(
+  new RequestOptions({
+    url: '/users',
+  })
+);
+
+console.log(response.data);
 ```
 
-Then, and every time you update your native dependencies, run:
+---
 
-```sh
-bundle exec pod install
+# Offline Request Queue
+
+Netra can automatically queue requests when the device is offline.
+
+```typescript
+const response = await client.post(
+  new RequestOptions({
+    url: '/messages',
+
+    body: RequestBody.createJson(
+      JSON.stringify({
+        message: 'Hello',
+      })
+    ),
+
+    offlinePolicyAction:
+      OfflinePolicyAction.queue(),
+  })
+);
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+When the network becomes available, queued requests can be restored and executed automatically.
 
-```sh
-# Using npm
-npm run ios
+---
 
-# OR using Yarn
-yarn ios
+# Retry Strategy
+
+Netra supports configurable retry policies for unreliable networks.
+
+```typescript
+offlinePolicyAction:
+  OfflinePolicyAction.retry(
+    3,
+    Duration.seconds(4)
+  )
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+Example flow:
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+```
+Request
+   |
+Failure
+   |
+Wait 4 seconds
+   |
+Retry
+   |
+Retry again
+```
 
-## Step 3: Modify your app
+---
 
-Now that you have successfully run the app, let's make changes!
+# Slow Network Handling
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+Netra provides strategies for slow or unstable connections.
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+```typescript
+slowNetworkPolicyAction:
+  SlowNetworkPolicyAction.wait(
+    Duration.seconds(5)
+  )
+```
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+Available strategies:
 
-## Congratulations! :tada:
+```typescript
+SlowNetworkPolicyAction.wait()
 
-You've successfully run and modified your React Native App. :partying_face:
+SlowNetworkPolicyAction.timeout()
 
-### Now what?
+SlowNetworkPolicyAction.useCache()
+```
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+---
 
-# Troubleshooting
+# Request Lifecycle Observers
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+Monitor request lifecycle events.
 
-# Learn More
+```typescript
+client.on(
+  'RequestSuccess',
+  ({ request, response }) => {
 
-To learn more about React Native, take a look at the following resources:
+    console.log(
+      request.url,
+      response.statusCode
+    );
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+  }
+);
+```
+
+Supported events:
+
+| Event | Description |
+|---|---|
+| RequestExecuted | Request execution started |
+| RequestSuccess | Request completed successfully |
+| RequestFailed | Request failed |
+| RequestQueued | Request added to offline queue |
+| QueuedRequestSuccess | Queued request executed successfully |
+
+---
+
+# Streaming
+
+Netra supports streaming responses for large payloads.
+
+```typescript
+const options = new RequestOptions({
+  url: '/large-file',
+});
+
+
+for await (
+  const chunk of client.getStream(options)
+) {
+
+  console.log(chunk.length);
+
+}
+```
+
+Useful for:
+
+- Large files
+- Images
+- Media content
+- Progressive downloads
+
+---
+
+# Multipart Upload
+
+Upload files using multipart requests.
+
+```typescript
+const options = new RequestOptions({
+
+  url: '/upload',
+
+  body: RequestBody.multipart([
+
+    RequestBodyPart.file(
+      'image',
+      'photo.jpg',
+      bytes,
+      'image/jpeg'
+    )
+
+  ])
+
+});
+
+
+await client.post(options);
+```
+
+---
+
+# Converter Support
+
+Netra supports multiple serialization converters.
+
+Available converters:
+
+- Kotlinx Serialization
+- Gson
+- Moshi
+
+Example:
+
+```typescript
+const client = new NetraClient({
+
+  baseUrl: 'https://api.example.com',
+
+  converterType:
+    ConverterType.MOSHI,
+
+});
+```
+
+---
+
+# Multiple Client Support
+
+You can create multiple clients with different configurations.
+
+```typescript
+const githubClient = new NetraClient({
+
+  baseUrl:
+    'https://api.github.com',
+
+  converterType:
+    ConverterType.GSON,
+
+});
+
+
+const apiClient = new NetraClient({
+
+  baseUrl:
+    'https://api.example.com',
+
+  converterType:
+    ConverterType.KOTLINX,
+
+});
+```
+
+---
+
+# Example Application
+
+The example project demonstrates:
+
+- GitHub API integration
+- CRUD operations
+- Offline request queue
+- Retry policies
+- Slow network handling
+- Request observers
+- Streaming image download
+- Multipart image upload
+- Multiple converter usage
+
+---
+
+# Architecture
+
+Netra React Native provides:
+
+```
+React Native App
+        |
+        |
+ TypeScript API
+        |
+        |
+ Native Bridge
+        |
+        |
+ Native Networking Layer
+        |
+        |
+ Android / iOS
+```
+
+The JavaScript layer provides a clean developer experience while networking operations are handled through native implementations.
+
+---
+
+# License
+
+MIT License
