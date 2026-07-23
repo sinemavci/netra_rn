@@ -3,7 +3,6 @@ package com.netrareactnative
 import android.Manifest
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.example.netra_flutter.dto.CircuitBreakerOptionsDTO
 import com.example.netra_flutter.dto.RequestOptionsDTO
@@ -44,7 +43,6 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
     promise: Promise?
   ) {
     try {
-      Log.e("", "client id in get: ${clientId} -- list count: ${NetraClientList.getClients().first().id}")
       val client = NetraClientList.getClients().find { it.id == clientId }
       val requestOptionsDto = requestOptions.let {
         Gson().fromJson(it, RequestOptionsDTO::class.java)
@@ -406,7 +404,6 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
       }
       val requestId = requestOptionsDto.id
       streamObserverList[requestId] = StreamObserver(reactContext)
-      Log.e("", "received in kt")
 
       CoroutineScope(Dispatchers.IO).launch {
         requestBuilder.executeStream(
@@ -417,7 +414,6 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
             while (inputStream.read(buffer).also { bytesRead = it } != -1) {
               val chunk = buffer.copyOfRange(0, bytesRead)
               mainHandler.post {
-                Log.e("", "chunk sended in kt: ${chunk}")
                 streamObserverList[requestId]?.sendChunk(chunk)
               }
             }

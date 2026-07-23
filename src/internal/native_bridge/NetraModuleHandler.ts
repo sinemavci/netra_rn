@@ -58,7 +58,6 @@ export class NetraModuleHandler {
         clientId,
         _requestOptions
       );
-      console.log('responseJson', responseJson);
       response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
     } catch (e) {
       throw ExceptionManager.parse(e);
@@ -144,8 +143,7 @@ export class NetraModuleHandler {
       });
 
       this.emitter.addListener('netra_stream_error', (e) => {
-        console.log('error', e);
-        // error = new Error(e);
+        error = new Error('stream error', e);
         done = true;
       });
 
