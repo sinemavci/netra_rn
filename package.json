@@ -1,8 +1,7 @@
 {
   "name": "netra-react-native",
-  "version": "0.1.0",
-  "description": "networking plugin with built-in caching, offline queueing, slow network strategies, circuit breaker support, multipart uploads, and event-driven observability.event-driven observability.",
-  "main": "./lib/module/index.js",
+  "version": "1.0.0",
+"description": "Networking plugin with built-in caching, offline queueing, slow network strategies, circuit breaker support, multipart uploads, and event-driven observability.",  "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
@@ -44,8 +43,18 @@
   },
   "keywords": [
     "react-native",
-    "ios",
-    "android"
+    "networking",
+    "http-client",
+    "offline-first",
+    "offline-queue",
+    "cache",
+    "retry",
+    "streaming",
+    "multipart",
+    "turbo-module",
+    "native-module",
+    "android",
+    "ios"
   ],
   "repository": {
     "type": "git",
