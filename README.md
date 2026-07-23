@@ -145,6 +145,18 @@ const response = await client.get(
 );
 
 console.log(response.data);
+
+client.on(
+  'RequestSuccess',
+  ({ request, response }) => {
+
+    console.log(
+      request.url,
+      response.statusCode
+    );
+
+  }
+);
 ```
 
 ---
