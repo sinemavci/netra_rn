@@ -4,6 +4,98 @@ Advanced networking SDK for React Native applications with offline support, slow
 
 Netra provides a modern TypeScript API while leveraging native networking capabilities underneath.
 
+# Netra vs Axios
+
+Netra and Axios are designed with different goals.
+
+Axios is a popular HTTP client for JavaScript and React Native applications, providing a simple and flexible API for making HTTP requests.
+
+Netra focuses on building resilient network communication by providing built-in offline handling, request recovery, slow network strategies and request lifecycle management.
+
+| Feature | Netra | Axios |
+|---|---|---|
+| Platform | React Native | JavaScript / React Native |
+| API Style | TypeScript SDK | Promise-based HTTP client |
+| GET / POST / PUT / PATCH / DELETE | ✅ | ✅ |
+| Type-safe API | ✅ Built-in TypeScript API | ⚠️ Requires manual typing |
+| Request Interceptors | ✅ Observer-based lifecycle system | ✅ Interceptors |
+| Response Interceptors | ✅ | ✅ |
+| Offline Request Queue | ✅ Built-in | ❌ Requires custom implementation |
+| Automatic Queue Restoration | ✅ | ❌ Requires custom implementation |
+| Retry Strategy | ✅ Built-in policies | ⚠️ Requires interceptor/custom logic |
+| Slow Network Handling | ✅ Built-in policies | ❌ Requires custom implementation |
+| Request Lifecycle Events | ✅ First-class feature | ⚠️ Usually implemented manually |
+| Streaming Support | ✅ Async stream API | ⚠️ Depends on environment |
+| Multipart Upload | ✅ | ✅ |
+| Multiple Converter Support | ✅ Kotlinx, Gson, Moshi | ⚠️ Manual transformation |
+| Native Networking Layer | ✅ Native implementation | JavaScript based HTTP client |
+
+---
+
+## When to Choose Netra?
+
+Choose Netra when your React Native application needs:
+
+- Reliable communication under unstable network conditions
+- Offline-first workflows
+- Automatic request recovery
+- Background synchronization
+- Request state monitoring
+- Advanced network policies
+
+Examples:
+
+- Enterprise applications
+- Field applications
+- Applications used in remote locations
+- Systems requiring reliable data delivery
+
+---
+
+## Different Design Approaches
+
+### Axios
+
+```text
+React Native App
+        |
+        |
+      Axios
+        |
+        |
+      HTTP API
+```
+
+Axios provides a flexible HTTP layer. Additional behaviors such as retries, caching, offline queues and synchronization usually need to be implemented separately.
+
+---
+
+### Netra
+
+```text
+React Native App
+        |
+        |
+ TypeScript API
+        |
+        |
+ Native Bridge
+        |
+        |
+ Native Networking Layer
+        |
+        |
+ Android / iOS
+```
+
+Netra treats network reliability as a built-in capability:
+
+- Offline request queue
+- Retry policies
+- Slow network strategies
+- Request observers
+- Queue restoration
+
 ## Features
 
 - 🚀 HTTP methods: GET, POST, PUT, PATCH, DELETE
@@ -293,25 +385,6 @@ The example project demonstrates:
 
 ---
 
-# Architecture
-
-Netra React Native provides:
-
-```
-React Native App
-        |
-        |
- TypeScript API
-        |
-        |
- Native Bridge
-        |
-        |
- Native Networking Layer
-        |
-        |
- Android / iOS
-```
 
 The JavaScript layer provides a clean developer experience while networking operations are handled through native implementations.
 
